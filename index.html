@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ML Coding Interview Questions — Python MSA</title>
   <meta name="description" content="Modern ML coding interview question bank in Python MSA format: transformers, LLMs, contrastive learning, LoRA, DPO, and fundamentals.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ML Coding Interview Questions — Python MSA">
+  <meta property="og:description" content="33 Python coding questions: LLM tuning, RLHF, transformers, and ML fundamentals. Single offline HTML file.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ML Coding Interview Questions">
+  <meta name="twitter:description" content="33 Python MSA interview questions — LLM tuning, RL, transformers, fundamentals.">
   <style>
     :root {
       --bg: #09090b;
@@ -383,6 +389,21 @@
       margin-bottom: 0.35rem;
     }
     .bundle-card p { color: var(--muted); }
+    .share-bar {
+      margin-top: 0.85rem;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+      align-items: center;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+    .share-bar strong { color: var(--text); font-weight: 600; }
+    .share-bar .share-hint { flex: 1 1 200px; }
     footer {
       text-align: center;
       padding: 2rem 1.5rem;
@@ -400,6 +421,10 @@
     <div class="header-inner">
       <h1>ML Coding Interview Questions</h1>
       <p class="subtitle">Python · MSA format · Fundamentals + modern LLM / transformer stack</p>
+      <div class="share-bar">
+        <span class="share-hint"><strong>Share this file</strong> — one self-contained HTML (works offline). Email, Slack, Drive, or double-click to open in any browser.</span>
+        <button class="btn" id="download-copy" type="button">Download a copy</button>
+      </div>
       <div class="toolbar">
         <div class="search-wrap">
           <input type="search" id="search" placeholder="Search topics, tags, keywords…" aria-label="Search questions">
@@ -486,9 +511,33 @@
     </section>
   </main>
 
-  <footer>ML Coding Interview Questions · Python MSA · NumPy-first unless noted</footer>
+  <footer>ML Coding Interview Questions · Python MSA · Single shareable HTML · NumPy-first unless noted</footer>
 
   <script>
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+      }
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      return Promise.resolve();
+    }
+
+    document.getElementById("download-copy").addEventListener("click", () => {
+      const blob = new Blob([document.documentElement.outerHTML], { type: "text/html;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "ml-coding-interview-questions.html";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
     const QUESTIONS = [
       {
         id: 1, title: "Softmax + cross-entropy", difficulty: "easy", era: "classic",
@@ -1342,11 +1391,12 @@ class RunningRewardNorm:
       });
 
       document.querySelectorAll(".copy-btn").forEach(btn => {
-        btn.addEventListener("click", async () => {
+        btn.addEventListener("click", () => {
           const code = document.getElementById(btn.dataset.codeId).textContent;
-          await navigator.clipboard.writeText(code);
-          btn.textContent = "Copied!";
-          setTimeout(() => { btn.textContent = "Copy"; }, 1500);
+          copyText(code).then(() => {
+            btn.textContent = "Copied!";
+            setTimeout(() => { btn.textContent = "Copy"; }, 1500);
+          });
         });
       });
 
