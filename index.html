@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ML Coding Interview Questions — Python MSA</title>
+  <meta name="description" content="Modern ML coding interview question bank in Python MSA format: transformers, LLMs, contrastive learning, LoRA, DPO, and fundamentals.">
+  <style>
+    :root {
+      --bg: #09090b;
+      --surface: #13131a;
+      --surface2: #1c1c27;
+      --surface3: #252533;
+      --accent: #818cf8;
+      --accent2: #22d3ee;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --border: #2e2e3a;
+      --code-bg: #0d0d12;
+      --easy: #34d399;
+      --medium: #fbbf24;
+      --hard: #f87171;
+      --tag-bg: rgba(129, 140, 248, 0.12);
+      --tag-border: rgba(129, 140, 248, 0.35);
+      --radius: 10px;
+      --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(129, 140, 248, 0.15), transparent),
+        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(34, 211, 238, 0.08), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(9, 9, 11, 0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.1rem 1.5rem 1rem;
+    }
+    header h1 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--text) 40%, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    header .subtitle {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-top: 0.25rem;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+      margin-top: 0.85rem;
+    }
+    .search-wrap { flex: 1 1 220px; min-width: 180px; }
+    .search-wrap input {
+      width: 100%;
+      padding: 0.55rem 0.85rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.88rem;
+      outline: none;
+    }
+    .search-wrap input:focus { border-color: var(--accent); }
+    .btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.5rem 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn:hover { border-color: var(--accent); color: var(--accent); }
+    .btn.active {
+      background: rgba(129, 140, 248, 0.18);
+      border-color: rgba(129, 140, 248, 0.5);
+      color: #c7d2fe;
+    }
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.5rem 4rem;
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+    }
+    .stat strong {
+      display: block;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent2);
+      line-height: 1.1;
+    }
+    .stat span { font-size: 0.78rem; color: var(--muted); }
+    .intro {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+    .intro strong { color: var(--text); }
+    .intro code {
+      font-family: var(--mono);
+      font-size: 0.85em;
+      background: var(--surface3);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      color: #c7d2fe;
+    }
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-bottom: 1.25rem;
+    }
+    .filter-row .label {
+      width: 100%;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 0.15rem;
+    }
+    .chip {
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--text); }
+    .chip.active {
+      background: var(--tag-bg);
+      border-color: var(--tag-border);
+      color: #c7d2fe;
+    }
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .toc h2 {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.35rem 1rem;
+    }
+    .toc a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.86rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0;
+    }
+    .toc a:hover { color: var(--accent); }
+    .toc .num {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      min-width: 1.5rem;
+    }
+    .question {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+      scroll-margin-top: 5rem;
+    }
+    .question.hidden { display: none; }
+    .q-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.75rem;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .q-title-wrap { flex: 1 1 200px; }
+    .q-title {
+      font-size: 1.05rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+    }
+    .q-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.45rem;
+    }
+    .badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.18rem 0.5rem;
+      border-radius: 999px;
+    }
+    .badge.easy { background: rgba(52, 211, 153, 0.15); color: var(--easy); }
+    .badge.medium { background: rgba(251, 191, 36, 0.15); color: var(--medium); }
+    .badge.hard { background: rgba(248, 113, 113, 0.15); color: var(--hard); }
+    .badge.modern {
+      background: rgba(34, 211, 238, 0.12);
+      color: var(--accent2);
+    }
+    .badge.classic {
+      background: rgba(161, 161, 170, 0.12);
+      color: var(--muted);
+    }
+    .tag {
+      font-size: 0.68rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: #a5b4fc;
+    }
+    .q-body { padding: 0 1.25rem 1.25rem; }
+    .msa-block {
+      margin-top: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .msa-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.45rem 0.85rem;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+    .msa-label.m { color: var(--accent2); }
+    .msa-label.s { color: #fcd34d; }
+    .msa-label.a { color: var(--easy); }
+    .msa-content {
+      padding: 0.85rem 1rem;
+      font-size: 0.9rem;
+    }
+    .msa-content ul {
+      margin: 0.35rem 0 0 1.15rem;
+    }
+    .msa-content li { margin-top: 0.3rem; }
+    .msa-content p + p { margin-top: 0.5rem; }
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+    }
+    .meta-table td {
+      padding: 0.3rem 0;
+      vertical-align: top;
+    }
+    .meta-table td:first-child {
+      color: var(--muted);
+      width: 7rem;
+      padding-right: 0.75rem;
+    }
+    .code-block {
+      position: relative;
+      margin-top: 0;
+    }
+    .code-block pre {
+      background: var(--code-bg);
+      border-top: 1px solid var(--border);
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      line-height: 1.55;
+      color: #e4e4e7;
+    }
+    .code-block .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      font-size: 0.72rem;
+      padding: 0.25rem 0.5rem;
+      opacity: 0.7;
+    }
+    .code-block .copy-btn:hover { opacity: 1; }
+    .answer-wrap.collapsed .code-block { display: none; }
+    .answer-wrap.collapsed .msa-content p.hint {
+      display: block;
+      color: var(--muted);
+      font-style: italic;
+      font-size: 0.85rem;
+    }
+    .answer-wrap:not(.collapsed) .msa-content p.hint { display: none; }
+    .toggle-answer {
+      margin-top: 0.75rem;
+    }
+    .bundles {
+      margin-top: 2.5rem;
+      padding: 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .bundles h2 {
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .bundle-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.75rem;
+    }
+    .bundle-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-size: 0.86rem;
+    }
+    .bundle-card h3 {
+      font-size: 0.82rem;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+    .bundle-card p { color: var(--muted); }
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+    }
+    @media (max-width: 640px) {
+      .header-inner, main { padding-left: 1rem; padding-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <h1>ML Coding Interview Questions</h1>
+      <p class="subtitle">Python · MSA format · Fundamentals + modern LLM / transformer stack</p>
+      <div class="toolbar">
+        <div class="search-wrap">
+          <input type="search" id="search" placeholder="Search topics, tags, keywords…" aria-label="Search questions">
+        </div>
+        <button class="btn" id="toggle-all-answers" type="button">Show all answers</button>
+        <button class="btn" id="filter-modern" type="button">Modern only</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero-stats">
+      <div class="stat"><strong>33</strong><span>Questions</span></div>
+      <div class="stat"><strong>10</strong><span>LLM tuning</span></div>
+      <div class="stat"><strong>8</strong><span>RL / RLHF</span></div>
+      <div class="stat"><strong>MSA</strong><span>Metadata · Spec · Answer</span></div>
+    </div>
+
+    <div class="intro">
+      <strong>MSA format:</strong> each problem has <code>M</code>etadata (constraints), <code>S</code>pecification (what to build),
+      and <code>A</code>nswer (reference code). Default: answers hidden — click <strong>Reveal answer</strong> to check your work.
+      Allowed unless noted: <code>numpy</code>, <code>math</code>, stdlib. PyTorch questions marked explicitly.
+    </div>
+
+    <div class="filter-row" id="difficulty-filters">
+      <span class="label">Difficulty</span>
+      <button class="chip active" data-filter="all" type="button">All</button>
+      <button class="chip" data-filter="easy" type="button">Easy</button>
+      <button class="chip" data-filter="medium" type="button">Medium</button>
+      <button class="chip" data-filter="hard" type="button">Hard</button>
+    </div>
+
+    <div class="filter-row" id="tag-filters">
+      <span class="label">Tags</span>
+      <button class="chip active" data-tag="all" type="button">All</button>
+      <button class="chip" data-tag="llm" type="button">LLM inference</button>
+      <button class="chip" data-tag="transformer" type="button">Transformers</button>
+      <button class="chip" data-tag="training" type="button">Training</button>
+      <button class="chip" data-tag="rlhf" type="button">RLHF / alignment</button>
+      <button class="chip" data-tag="tuning" type="button">LLM tuning</button>
+      <button class="chip" data-tag="rl" type="button">RL</button>
+      <button class="chip" data-tag="classic" type="button">Classic ML</button>
+    </div>
+
+    <nav class="toc" aria-label="Table of contents">
+      <h2>Questions</h2>
+      <div class="toc-grid" id="toc"></div>
+    </nav>
+
+    <div id="questions"></div>
+
+    <section class="bundles">
+      <h2>Suggested interview bundles</h2>
+      <div class="bundle-grid">
+        <div class="bundle-card">
+          <h3>LLM inference (45 min)</h3>
+          <p>#6 RMSNorm → #8 RoPE → #12 KV cache → #14 Top-p sampling</p>
+        </div>
+        <div class="bundle-card">
+          <h3>Transformer block (60 min)</h3>
+          <p>#7 Causal mask → #9 MHA → #10 GQA → #11 SwiGLU FFN</p>
+        </div>
+        <div class="bundle-card">
+          <h3>Modern training (60 min)</h3>
+          <p>#4 Label smoothing → #13 InfoNCE → #15 LoRA → #17 DPO loss</p>
+        </div>
+        <div class="bundle-card">
+          <h3>Foundations (45 min)</h3>
+          <p>#1 Softmax + CE → #2 Stratified split → #3 Metrics → #5 K-means</p>
+        </div>
+        <div class="bundle-card">
+          <h3>LLM fine-tuning (60 min)</h3>
+          <p>#23 SFT masked loss → #26 LR scaling → #15 LoRA → #27 Packed attention mask</p>
+        </div>
+        <div class="bundle-card">
+          <h3>RLHF / PPO (60 min)</h3>
+          <p>#24 Reward model → #25 KL penalty → #30 GAE → #29 PPO clip → #17 DPO</p>
+        </div>
+        <div class="bundle-card">
+          <h3>Modern RL (45 min)</h3>
+          <p>#32 REINFORCE → #31 GRPO → #33 Reward norm → #29 PPO clip</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>ML Coding Interview Questions · Python MSA · NumPy-first unless noted</footer>
+
+  <script>
+    const QUESTIONS = [
+      {
+        id: 1, title: "Softmax + cross-entropy", difficulty: "easy", era: "classic",
+        tags: ["classic", "training"],
+        time: "10–15 min", libs: "NumPy",
+        topic: "Classification losses",
+        spec: `<p>Implement:</p>
+<ul>
+<li><code>softmax(logits)</code> — shape <code>(N, C)</code> or <code>(C,)</code>, numerically stable, rows sum to 1.</li>
+<li><code>cross_entropy(logits, targets)</code> — mean NLL; use log-softmax, not <code>log(softmax)</code>.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def softmax(logits):
+    x = np.asarray(logits, dtype=np.float64)
+    if x.ndim == 1:
+        x = x - x.max()
+        e = np.exp(x)
+        return e / e.sum()
+    x = x - x.max(axis=1, keepdims=True)
+    e = np.exp(x)
+    return e / e.sum(axis=1, keepdims=True)
+
+def cross_entropy(logits, targets):
+    logits = np.asarray(logits, dtype=np.float64)
+    targets = np.asarray(targets, dtype=np.int64)
+    n = logits.shape[0]
+    shifted = logits - logits.max(axis=1, keepdims=True)
+    log_sum_exp = np.log(np.exp(shifted).sum(axis=1))
+    log_probs = shifted - log_sum_exp[:, None]
+    return float((-log_probs[np.arange(n), targets]).mean())`
+      },
+      {
+        id: 2, title: "Stratified train/val split", difficulty: "easy", era: "classic",
+        tags: ["classic", "training"],
+        time: "10 min", libs: "NumPy",
+        topic: "Data splitting",
+        spec: `<p><code>stratified_split(X, y, val_fraction=0.2, seed=0)</code> → <code>X_train, X_val, y_train, y_val</code>.</p>
+<ul>
+<li>Preserve class proportions; each sample in exactly one split.</li>
+<li>Reproducible shuffle per class with <code>seed</code>.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def stratified_split(X, y, val_fraction=0.2, seed=0):
+    rng = np.random.default_rng(seed)
+    train_idx, val_idx = [], []
+    for cls in np.unique(y):
+        idx = np.flatnonzero(y == cls)
+        rng.shuffle(idx)
+        n_val = max(1, int(round(len(idx) * val_fraction)))
+        val_idx.extend(idx[:n_val].tolist())
+        train_idx.extend(idx[n_val:].tolist())
+    train_idx, val_idx = np.array(train_idx), np.array(val_idx)
+    rng.shuffle(train_idx); rng.shuffle(val_idx)
+    return X[train_idx], X[val_idx], y[train_idx], y[val_idx]`
+      },
+      {
+        id: 3, title: "Macro precision / recall / F1", difficulty: "easy", era: "classic",
+        tags: ["classic"],
+        time: "10 min", libs: "NumPy",
+        topic: "Metrics",
+        spec: `<p><code>classification_report(y_true, y_pred, average="macro")</code> → dict with <code>precision</code>, <code>recall</code>, <code>f1</code>.</p>
+<ul><li>Macro average over classes in <code>y_true</code>; zero-division → 0 for that class.</li></ul>`,
+        answer: `import numpy as np
+
+def classification_report(y_true, y_pred, average="macro"):
+    classes = np.unique(y_true)
+    ps, rs, fs = [], [], []
+    for c in classes:
+        tp = np.sum((y_true == c) & (y_pred == c))
+        fp = np.sum((y_true != c) & (y_pred == c))
+        fn = np.sum((y_true == c) & (y_pred != c))
+        p = tp / (tp + fp) if tp + fp else 0.0
+        r = tp / (tp + fn) if tp + fn else 0.0
+        f = 2 * p * r / (p + r) if p + r else 0.0
+        ps.append(p); rs.append(r); fs.append(f)
+    return {"precision": float(np.mean(ps)), "recall": float(np.mean(rs)), "f1": float(np.mean(fs))}`
+      },
+      {
+        id: 4, title: "Label-smoothing cross-entropy", difficulty: "easy", era: "modern",
+        tags: ["training", "transformer"],
+        time: "12 min", libs: "NumPy",
+        topic: "Regularization (used in ViT, LLM pretraining)",
+        spec: `<p><code>label_smooth_ce(logits, targets, num_classes, smoothing=0.1)</code> — mean loss over batch.</p>
+<ul>
+<li>Hard target distribution: <code>(1 - ε)</code> on true class, <code>ε / (C - 1)</code> on others.</li>
+<li>Loss = negative sum of <code>q_i * log p_i</code> with stable log-softmax.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def label_smooth_ce(logits, targets, num_classes, smoothing=0.1):
+    n, c = logits.shape
+    shifted = logits - logits.max(axis=1, keepdims=True)
+    log_z = np.log(np.exp(shifted).sum(axis=1, keepdims=True))
+    log_probs = shifted - log_z
+    q = np.full((n, c), smoothing / (c - 1))
+    q[np.arange(n), targets] = 1.0 - smoothing
+    return float(-(q * log_probs).sum(axis=1).mean())`
+      },
+      {
+        id: 5, title: "K-means (Lloyd's algorithm)", difficulty: "medium", era: "classic",
+        tags: ["classic"],
+        time: "20 min", libs: "NumPy",
+        topic: "Unsupervised",
+        spec: `<p><code>kmeans(X, k, max_iters=100, seed=0)</code> → <code>(centroids, labels)</code>.</p>
+<ul>
+<li>Init: sample k distinct points. Squared Euclidean distance. Stop on label convergence.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def kmeans(X, k, max_iters=100, seed=0):
+    rng = np.random.default_rng(seed)
+    centroids = X[rng.choice(len(X), k, replace=False)].copy()
+    labels = np.zeros(len(X), dtype=int)
+    for _ in range(max_iters):
+        dists = ((X[:, None] - centroids[None]) ** 2).sum(axis=2)
+        new_labels = dists.argmin(axis=1)
+        if np.array_equal(new_labels, labels): break
+        labels = new_labels
+        for j in range(k):
+            mask = labels == j
+            if mask.any(): centroids[j] = X[mask].mean(axis=0)
+    return centroids, labels`
+      },
+      {
+        id: 6, title: "RMSNorm", difficulty: "easy", era: "modern",
+        tags: ["transformer", "llm"],
+        time: "10 min", libs: "NumPy",
+        topic: "Normalization (LLaMA, Mistral, Gemma)",
+        spec: `<p><code>rms_norm(x, weight, eps=1e-6)</code> — normalize over last dim; no mean subtraction.</p>
+<ul>
+<li><code>x_hat = x / sqrt(mean(x²) + eps)</code>, return <code>weight * x_hat</code>.</li>
+<li>Input <code>x</code>: <code>(..., d)</code>, <code>weight</code>: <code>(d,)</code>.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def rms_norm(x, weight, eps=1e-6):
+    x = np.asarray(x, dtype=np.float64)
+    rms = np.sqrt((x ** 2).mean(axis=-1, keepdims=True) + eps)
+    return weight * (x / rms)`
+      },
+      {
+        id: 7, title: "Causal attention mask", difficulty: "easy", era: "modern",
+        tags: ["transformer", "llm"],
+        time: "8 min", libs: "NumPy",
+        topic: "Autoregressive decoding",
+        spec: `<p>Implement two helpers:</p>
+<ul>
+<li><code>causal_mask(seq_len)</code> → bool array <code>(seq_len, seq_len)</code>; position i may attend to j iff <code>j &lt;= i</code>.</li>
+<li><code>merge_masks(causal, padding)</code> — element-wise AND; both broadcastable to same shape.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def causal_mask(seq_len):
+    return np.tril(np.ones((seq_len, seq_len), dtype=bool))
+
+def merge_masks(causal, padding):
+    return np.asarray(causal) & np.asarray(padding)`
+      },
+      {
+        id: 8, title: "Rotary positional embeddings (RoPE)", difficulty: "medium", era: "modern",
+        tags: ["transformer", "llm"],
+        time: "20 min", libs: "NumPy",
+        topic: "Position encoding (GPT-NeoX, LLaMA)",
+        spec: `<p>Apply RoPE to query/key vectors (last dim must be even).</p>
+<ul>
+<li><code>rope_freqs(seq_len, dim, theta=10000.0)</code> → angles shape <code>(seq_len, dim/2)</code>.</li>
+<li><code>apply_rope(x, freqs)</code> — split last dim into pairs <code>(x1, x2)</code>, rotate: <code>x1' = x1*cos - x2*sin</code>, <code>x2' = x1*sin + x2*cos</code>.</li>
+<li><code>x</code> shape <code>(batch, seq, dim)</code>; broadcast freqs over batch.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def rope_freqs(seq_len, dim, theta=10000.0):
+    inv_freq = 1.0 / (theta ** (np.arange(0, dim, 2) / dim))
+    t = np.arange(seq_len)
+    return np.outer(t, inv_freq)
+
+def apply_rope(x, freqs):
+    cos = np.cos(freqs)[None, :, :]
+    sin = np.sin(freqs)[None, :, :]
+    x1, x2 = x[..., 0::2], x[..., 1::2]
+    out = np.empty_like(x)
+    out[..., 0::2] = x1 * cos - x2 * sin
+    out[..., 1::2] = x1 * sin + x2 * cos
+    return out`
+      },
+      {
+        id: 9, title: "Multi-head self-attention", difficulty: "medium", era: "modern",
+        tags: ["transformer"],
+        time: "20 min", libs: "NumPy",
+        topic: "Attention core",
+        spec: `<p><code>mha_forward(x, Wq, Wk, Wv, Wo, n_heads, mask=None)</code></p>
+<ul>
+<li><code>x</code>: <code>(B, T, d_model)</code>; project to Q,K,V; split heads <code>(B, H, T, d_head)</code>.</li>
+<li>Scaled dot-product per head; optional bool mask (True = keep).</li>
+<li>Concat heads, project with <code>Wo</code>. Return <code>(B, T, d_model)</code>.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def softmax(x, axis=-1):
+    x = x - x.max(axis=axis, keepdims=True)
+    e = np.exp(x)
+    return e / e.sum(axis=axis, keepdims=True)
+
+def mha_forward(x, Wq, Wk, Wv, Wo, n_heads, mask=None):
+    B, T, D = x.shape
+    d_head = D // n_heads
+    Q = (x @ Wq).reshape(B, T, n_heads, d_head).transpose(0, 2, 1, 3)
+    K = (x @ Wk).reshape(B, T, n_heads, d_head).transpose(0, 2, 1, 3)
+    V = (x @ Wv).reshape(B, T, n_heads, d_head).transpose(0, 2, 1, 3)
+    scores = Q @ K.transpose(0, 1, 3, 2) / np.sqrt(d_head)
+    if mask is not None:
+        scores = np.where(mask, scores, -1e9)
+    attn = softmax(scores, axis=-1)
+    out = (attn @ V).transpose(0, 2, 1, 3).reshape(B, T, D)
+    return out @ Wo`
+      },
+      {
+        id: 10, title: "Grouped-query attention (GQA)", difficulty: "hard", era: "modern",
+        tags: ["transformer", "llm"],
+        time: "25 min", libs: "NumPy",
+        topic: "Efficient KV (Llama 2/3, Mistral)",
+        spec: `<p><code>gqa_forward(Q, K, V, n_heads, n_kv_heads, mask=None)</code></p>
+<ul>
+<li><code>Q</code>: <code>(B, H, T, d)</code>; <code>K, V</code>: <code>(B, H_kv, T, d)</code> with <code>H % H_kv == 0</code>.</li>
+<li>Repeat K/V heads <code>H / H_kv</code> times to match Q heads (no extra params — broadcast groups).</li>
+<li>Return attention output same shape as Q.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def repeat_kv(x, n_rep):
+    if n_rep == 1: return x
+    B, H_kv, T, D = x.shape
+    x = x[:, :, None, :, :]
+    x = np.repeat(x, n_rep, axis=2)
+    return x.reshape(B, H_kv * n_rep, T, D)
+
+def gqa_forward(Q, K, V, n_heads, n_kv_heads, mask=None):
+    n_rep = n_heads // n_kv_heads
+    K = repeat_kv(K, n_rep)
+    V = repeat_kv(V, n_rep)
+    d = Q.shape[-1]
+    scores = Q @ K.transpose(0, 1, 3, 2) / np.sqrt(d)
+    if mask is not None:
+        scores = np.where(mask, scores, -1e9)
+    scores = scores - scores.max(axis=-1, keepdims=True)
+    attn = np.exp(scores); attn /= attn.sum(axis=-1, keepdims=True)
+    return attn @ V`
+      },
+      {
+        id: 11, title: "SwiGLU feed-forward block", difficulty: "medium", era: "modern",
+        tags: ["transformer", "llm"],
+        time: "15 min", libs: "NumPy",
+        topic: "FFN (PaLM, LLaMA)",
+        spec: `<p><code>swiglu_ffn(x, W_gate, W_up, W_down)</code></p>
+<ul>
+<li><code>gate = silu(x @ W_gate)</code>, <code>up = x @ W_up</code>, return <code>(gate * up) @ W_down</code>.</li>
+<li><code>silu(t) = t * sigmoid(t)</code>. Shapes: <code>x (B,T,d)</code>, hidden proj to <code>d_ff</code>.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def silu(x):
+    return x / (1.0 + np.exp(-x))
+
+def swiglu_ffn(x, W_gate, W_up, W_down):
+    gate = silu(x @ W_gate)
+    up = x @ W_up
+    return (gate * up) @ W_down`
+      },
+      {
+        id: 12, title: "KV cache decode step", difficulty: "medium", era: "modern",
+        tags: ["llm"],
+        time: "18 min", libs: "NumPy",
+        topic: "Autoregressive inference",
+        spec: `<p>Implement incremental decoding cache:</p>
+<ul>
+<li><code>KVCache.init(batch, n_heads, max_len, d_head)</code> → dict with zero arrays.</li>
+<li><code>append(cache, K_new, V_new, pos)</code> — write single-token K/V at index <code>pos</code> for all heads.</li>
+<li><code>get(cache, length)</code> — return K,V sliced to <code>[:, :, :length, :]</code>.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def kv_cache_init(batch, n_heads, max_len, d_head):
+    shape = (batch, n_heads, max_len, d_head)
+    return {"K": np.zeros(shape), "V": np.zeros(shape), "max_len": max_len}
+
+def kv_cache_append(cache, K_new, V_new, pos):
+    # K_new, V_new: (B, H, 1, D)
+    cache["K"][:, :, pos:pos+1, :] = K_new
+    cache["V"][:, :, pos:pos+1, :] = V_new
+
+def kv_cache_get(cache, length):
+    return cache["K"][:, :, :length, :], cache["V"][:, :, :length, :]`
+      },
+      {
+        id: 13, title: "InfoNCE contrastive loss", difficulty: "medium", era: "modern",
+        tags: ["training"],
+        time: "15 min", libs: "NumPy",
+        topic: "Contrastive learning (CLIP, SimCLR)",
+        spec: `<p><code>info_nce(sim_matrix, temperature=0.07)</code></p>
+<ul>
+<li><code>sim_matrix[i,j] = cosine_sim(z_i, z_j)</code> for batch of L2-normalized embeddings; diagonal is positive pair.</li>
+<li>Loss = mean over rows of <code>-log( exp(s_ii/τ) / sum_j exp(s_ij/τ) )</code>.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def info_nce(sim_matrix, temperature=0.07):
+    logits = sim_matrix / temperature
+    logits = logits - logits.max(axis=1, keepdims=True)
+    exp_logits = np.exp(logits)
+    denom = exp_logits.sum(axis=1)
+    n = sim_matrix.shape[0]
+    pos = exp_logits[np.arange(n), np.arange(n)]
+    return float((-np.log(pos / denom)).mean())`
+      },
+      {
+        id: 14, title: "Top-p (nucleus) sampling", difficulty: "medium", era: "modern",
+        tags: ["llm"],
+        time: "15 min", libs: "NumPy",
+        time2: "",
+        topic: "Text generation",
+        spec: `<p><code>top_p_sample(logits, p=0.9, rng=None)</code> → int token index.</p>
+<ul>
+<li>Sort probs descending; keep smallest set with cumulative prob ≥ p.</li>
+<li>Renormalize kept probs; sample one index. Use provided RNG for reproducibility.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def top_p_sample(logits, p=0.9, rng=None):
+    rng = rng or np.random.default_rng()
+    probs = np.exp(logits - logits.max())
+    probs /= probs.sum()
+    order = np.argsort(probs)[::-1]
+    sorted_probs = probs[order]
+    cum = np.cumsum(sorted_probs)
+    k = int(np.searchsorted(cum, p, side="left")) + 1
+    keep = order[:k]
+    kept = probs[keep]
+    kept /= kept.sum()
+    return int(rng.choice(keep, p=kept))`
+      },
+      {
+        id: 15, title: "LoRA linear layer forward", difficulty: "medium", era: "modern",
+        tags: ["training", "llm"],
+        time: "15 min", libs: "NumPy",
+        topic: "Parameter-efficient fine-tuning",
+        spec: `<p><code>lora_linear(x, W, A, B, alpha=16, rank=8)</code></p>
+<ul>
+<li>Base: <code>x @ W</code>. LoRA delta: <code>(x @ A @ B) * (alpha / rank)</code>.</li>
+<li><code>W: (d_in, d_out)</code>, <code>A: (d_in, r)</code>, <code>B: (r, d_out)</code>. Return sum.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def lora_linear(x, W, A, B, alpha=16, rank=8):
+    base = x @ W
+    delta = (x @ A @ B) * (alpha / rank)
+    return base + delta`
+      },
+      {
+        id: 16, title: "Online softmax (streaming attention)", difficulty: "hard", era: "modern",
+        tags: ["transformer", "llm"],
+        time: "25 min", libs: "NumPy",
+        topic: "Flash-attention building block",
+        spec: `<p>Process key/value blocks without materializing full softmax over all keys.</p>
+<ul>
+<li><code>online_softmax_update(m, l, scores_block)</code> — update running max <code>m</code> and sum <code>l</code> of exp(scores - m).</li>
+<li><code>online_attention(q, k_blocks, v_blocks)</code> — loop blocks; return weighted output for one query vector.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def online_attention(q, k_blocks, v_blocks):
+    d = q.shape[-1]
+    m = -np.inf
+    l = 0.0
+    num = np.zeros_like(q)
+    for K, V in zip(k_blocks, v_blocks):
+        scores = (K @ q) / np.sqrt(d)
+        m_new = np.maximum(m, scores.max())
+        exp_old = np.exp(m - m_new) if np.isfinite(m) else 0.0
+        exp_scores = np.exp(scores - m_new)
+        l = l * exp_old + exp_scores.sum()
+        num = num * exp_old + (exp_scores[:, None] * V).sum(axis=0)
+        m = m_new
+    return num / l`
+      },
+      {
+        id: 17, title: "DPO loss (direct preference optimization)", difficulty: "hard", era: "modern",
+        tags: ["rlhf", "training"],
+        time: "20 min", libs: "NumPy",
+        topic: "LLM alignment",
+        spec: `<p><code>dpo_loss(logp_chosen, logp_rejected, logp_ref_chosen, logp_ref_rejected, beta=0.1)</code></p>
+<ul>
+<li>Implicit reward diff: <code>Δ_π = (log π_θ(c) - log π_θ(r)) - (log π_ref(c) - log π_ref(r))</code>.</li>
+<li>Per pair loss: <code>-log σ(β * Δ_π)</code>. Return mean over batch.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def dpo_loss(logp_chosen, logp_rejected, logp_ref_chosen, logp_ref_rejected, beta=0.1):
+    pi_diff = logp_chosen - logp_rejected
+    ref_diff = logp_ref_chosen - logp_ref_rejected
+    logits = beta * (pi_diff - ref_diff)
+    return float((-np.log(1.0 / (1.0 + np.exp(-logits)))).mean())`
+      },
+      {
+        id: 18, title: "Mixture-of-Experts top-k routing", difficulty: "hard", era: "modern",
+        tags: ["transformer", "llm"],
+        time: "25 min", libs: "NumPy",
+        topic: "MoE (Mixtral, DeepSeek)",
+        spec: `<p><code>route_tokens(router_logits, k=2)</code> → <code>(expert_indices, gate_weights)</code></p>
+<ul>
+<li><code>router_logits</code>: <code>(T, E)</code> per-token expert scores.</li>
+<li>Top-k experts per token; gate weights = softmax over selected logits only, sum to 1.</li>
+<li>Return indices <code>(T, k)</code> and weights <code>(T, k)</code>.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def route_tokens(router_logits, k=2):
+    T, E = router_logits.shape
+    idx = np.argsort(router_logits, axis=1)[:, -k:][:, ::-1]
+    selected = np.take_along_axis(router_logits, idx, axis=1)
+    sel = selected - selected.max(axis=1, keepdims=True)
+    w = np.exp(sel); w /= w.sum(axis=1, keepdims=True)
+    return idx, w`
+      },
+      {
+        id: 19, title: "Temperature + top-k sampling", difficulty: "easy", era: "modern",
+        tags: ["llm"],
+        time: "10 min", libs: "NumPy",
+        topic: "Decoding",
+        spec: `<p><code>sample_next_token(logits, temperature=1.0, top_k=50, rng=None)</code></p>
+<ul>
+<li>Scale logits by <code>1/temperature</code>; zero out all but top-k logits; softmax sample.</li>
+<li><code>temperature → 0</code>: argmax (greedy).</li>
+</ul>`,
+        answer: `import numpy as np
+
+def sample_next_token(logits, temperature=1.0, top_k=50, rng=None):
+    rng = rng or np.random.default_rng()
+    logits = np.asarray(logits, dtype=np.float64)
+    if temperature <= 0:
+        return int(logits.argmax())
+    scaled = logits / temperature
+    k = min(top_k, len(scaled))
+    thresh = np.partition(scaled, -k)[-k]
+    filtered = np.where(scaled >= thresh, scaled, -np.inf)
+    probs = np.exp(filtered - filtered.max()); probs /= probs.sum()
+    return int(rng.choice(len(probs), p=probs))`
+      },
+      {
+        id: 20, title: "Gradient accumulation wrapper", difficulty: "easy", era: "modern",
+        tags: ["training"],
+        time: "10 min", libs: "stdlib",
+        topic: "Large-batch training",
+        spec: `<p>Class <code>GradAccum(steps=4)</code>:</p>
+<ul>
+<li><code>should_step()</code> — True every <code>steps</code> micro-batches (and after reset).</li>
+<li><code>scale_loss(loss)</code> — return <code>loss / steps</code> for backward.</li>
+<li>Track micro-step counter; reset after optimizer step.</li>
+</ul>`,
+        answer: `class GradAccum:
+    def __init__(self, steps=4):
+        self.steps = steps
+        self._count = 0
+
+    def scale_loss(self, loss):
+        return loss / self.steps
+
+    def should_step(self):
+        self._count += 1
+        if self._count >= self.steps:
+            self._count = 0
+            return True
+        return False`
+      },
+      {
+        id: 21, title: "Logistic regression (batch GD)", difficulty: "medium", era: "classic",
+        tags: ["classic", "training"],
+        time: "20 min", libs: "NumPy",
+        topic: "Linear models",
+        spec: `<p><code>train_logistic_regression(X, y, lr=0.1, n_epochs=1000, l2=0.0)</code> → weights <code>w</code>.</p>
+<ul><li>Sigmoid model, mean BCE + L2 penalty on weights.</li></ul>`,
+        answer: `import numpy as np
+
+def sigmoid(z):
+    z = np.clip(z, -500, 500)
+    return 1.0 / (1.0 + np.exp(-z))
+
+def train_logistic_regression(X, y, lr=0.1, n_epochs=1000, l2=0.0):
+    n, d = X.shape
+    w = np.zeros(d)
+    for _ in range(n_epochs):
+        p = sigmoid(X @ w)
+        grad = (X.T @ (p - y)) / n + l2 * w
+        w -= lr * grad
+    return w`
+      },
+      {
+        id: 22, title: "Cosine LR warmup schedule", difficulty: "medium", era: "classic",
+        tags: ["classic", "training"],
+        time: "12 min", libs: "math",
+        topic: "Optimization",
+        spec: `<p><code>lr_schedule(step, warmup_steps, total_steps, base_lr)</code></p>
+<ul>
+<li>Linear warmup 0→base_lr; cosine decay to 0; return 0 if step ≥ total_steps.</li>
+</ul>`,
+        answer: `import math
+
+def lr_schedule(step, warmup_steps, total_steps, base_lr):
+    if step >= total_steps:
+        return 0.0
+    if step < warmup_steps:
+        return base_lr * step / max(1, warmup_steps)
+    p = (step - warmup_steps) / max(1, total_steps - warmup_steps)
+    return base_lr * 0.5 * (1.0 + math.cos(math.pi * p))`
+      },
+      {
+        id: 23, title: "SFT loss with response-only mask", difficulty: "medium", era: "modern",
+        tags: ["tuning", "training", "llm"],
+        time: "15 min", libs: "NumPy",
+        topic: "Supervised fine-tuning (instruction tuning)",
+        spec: `<p><code>sft_loss(log_probs, targets, loss_mask)</code> — scalar mean NLL.</p>
+<ul>
+<li><code>log_probs</code>, <code>targets</code>, <code>loss_mask</code>: shape <code>(T,)</code> for one sequence (token-level log prob of target token).</li>
+<li>Compute NLL only where <code>loss_mask == 1</code> (assistant / completion tokens). Ignore prompt + padding.</li>
+<li>Normalize by number of supervised tokens, not total length.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def sft_loss(log_probs, targets, loss_mask):
+    log_probs = np.asarray(log_probs)
+    loss_mask = np.asarray(loss_mask, dtype=bool)
+    if loss_mask.sum() == 0:
+        raise ValueError("No supervised tokens")
+    nll = -log_probs[loss_mask]
+    return float(nll.mean())`
+      },
+      {
+        id: 24, title: "Bradley–Terry reward model loss", difficulty: "medium", era: "modern",
+        tags: ["tuning", "rlhf"],
+        time: "15 min", libs: "NumPy",
+        topic: "Preference modeling (RLHF stage 1)",
+        spec: `<p><code>reward_model_loss(r_chosen, r_rejected)</code> — mean over pairs.</p>
+<ul>
+<li><code>r_chosen</code>, <code>r_rejected</code>: shape <code>(N,)</code> scalar scores from reward head.</li>
+<li>Bradley–Terry: maximize <code>P(chosen ≻ rejected)</code> → loss = <code>-mean(log σ(r_c - r_r))</code>.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def reward_model_loss(r_chosen, r_rejected):
+    diff = np.asarray(r_chosen) - np.asarray(r_rejected)
+    return float(-np.log(1.0 / (1.0 + np.exp(-diff))).mean())`
+      },
+      {
+        id: 25, title: "Token-level KL to reference model", difficulty: "medium", era: "modern",
+        tags: ["tuning", "rlhf", "rl"],
+        time: "18 min", libs: "NumPy",
+        topic: "RLHF / PPO KL penalty",
+        spec: `<p>Implement approximate KL used in PPO-style LLM training:</p>
+<ul>
+<li><code>kl_divergence(logp_policy, logp_ref)</code> — per-token <code>exp(log_ref - log_pol) - (log_ref - log_pol) - 1</code> (k1 estimator).</li>
+<li><code>kl_penalty_loss(logp_policy, logp_ref, mask, beta=0.02)</code> — masked mean KL × beta.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def kl_divergence(logp_policy, logp_ref):
+    log_ratio = np.asarray(logp_ref) - np.asarray(logp_policy)
+    ratio = np.exp(log_ratio)
+    return ratio - log_ratio - 1.0
+
+def kl_penalty_loss(logp_policy, logp_ref, mask, beta=0.02):
+    mask = np.asarray(mask, dtype=bool)
+    kl = kl_divergence(logp_policy, logp_ref)
+    return float(beta * kl[mask].mean())`
+      },
+      {
+        id: 26, title: "Linear LR scaling for fine-tuning", difficulty: "easy", era: "modern",
+        tags: ["tuning", "training"],
+        time: "8 min", libs: "stdlib",
+        topic: "Hyperparameter scaling (OpenAI scaling laws rule-of-thumb)",
+        spec: `<p><code>scale_lr(base_lr, batch_size, ref_batch=256, max_lr=None)</code></p>
+<ul>
+<li>Linear scaling: <code>lr = base_lr * (batch_size / ref_batch)</code>.</li>
+<li>If <code>max_lr</code> given, clip to that ceiling (warmup cap in practice).</li>
+<li>Also implement <code>effective_batch_size(micro_batch, grad_accum)</code> → product.</li>
+</ul>`,
+        answer: `def effective_batch_size(micro_batch, grad_accum):
+    return micro_batch * grad_accum
+
+def scale_lr(base_lr, batch_size, ref_batch=256, max_lr=None):
+    lr = base_lr * (batch_size / ref_batch)
+    if max_lr is not None:
+        lr = min(lr, max_lr)
+    return lr`
+      },
+      {
+        id: 27, title: "Packed-sequence block attention mask", difficulty: "hard", era: "modern",
+        tags: ["tuning", "transformer", "llm"],
+        time: "20 min", libs: "NumPy",
+        topic: "Efficient SFT (multiple docs per GPU step)",
+        spec: `<p><code>packed_attention_mask(seq_lens, max_len)</code> → bool <code>(max_len, max_len)</code>.</p>
+<ul>
+<li>Sequence is concatenation of segments with lengths <code>seq_lens</code> (e.g. <code>[3, 2, 4]</code>).</li>
+<li>Token i may attend to j iff same segment AND <code>j &lt;= i</code> (causal within segment).</li>
+<li>No cross-segment attention (block-diagonal causal).</li>
+</ul>`,
+        answer: `import numpy as np
+
+def packed_attention_mask(seq_lens, max_len):
+    mask = np.zeros((max_len, max_len), dtype=bool)
+    start = 0
+    for length in seq_lens:
+        end = start + length
+        mask[start:end, start:end] = np.tril(np.ones((length, length), dtype=bool))
+        start = end
+    return mask`
+      },
+      {
+        id: 28, title: "Log-prob under teacher forcing", difficulty: "easy", era: "modern",
+        tags: ["tuning", "llm", "rl"],
+        time: "12 min", libs: "NumPy",
+        topic: "RLHF rollout scoring",
+        spec: `<p><code>sequence_logprob(logits, target_ids)</code> → total log prob and per-token log probs.</p>
+<ul>
+<li><code>logits</code>: <code>(T, V)</code>; <code>target_ids</code>: <code>(T,)</code> next-token targets aligned with positions.</li>
+<li>Use stable log-softmax; return <code>(sum_logp, log_probs[T])</code>.</li>
+<li>Used in PPO / GRPO to score generated continuations.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def sequence_logprob(logits, target_ids):
+    shifted = logits - logits.max(axis=1, keepdims=True)
+    log_z = np.log(np.exp(shifted).sum(axis=1))
+    log_probs = shifted - log_z[:, None]
+    token_logp = log_probs[np.arange(len(target_ids)), target_ids]
+    return float(token_logp.sum()), token_logp`
+      },
+      {
+        id: 29, title: "PPO clipped surrogate objective", difficulty: "hard", era: "modern",
+        tags: ["rl", "rlhf"],
+        time: "20 min", libs: "NumPy",
+        topic: "Policy optimization (RLHF stage 2)",
+        spec: `<p><code>ppo_loss(logp_new, logp_old, advantages, clip_eps=0.2)</code></p>
+<ul>
+<li>Ratio <code>r = exp(logp_new - logp_old)</code> per token or per sequence (here per element).</li>
+<li><code>L = -mean(min(r*A, clip(r, 1-ε, 1+ε)*A))</code> — pessimistic clip.</li>
+<li>Input shapes all broadcastable 1D arrays of same length.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def ppo_loss(logp_new, logp_old, advantages, clip_eps=0.2):
+    ratio = np.exp(np.asarray(logp_new) - np.asarray(logp_old))
+    adv = np.asarray(advantages)
+    unclipped = ratio * adv
+    clipped = np.clip(ratio, 1.0 - clip_eps, 1.0 + clip_eps) * adv
+    return float(-np.minimum(unclipped, clipped).mean())`
+      },
+      {
+        id: 30, title: "GAE (generalized advantage estimation)", difficulty: "hard", era: "modern",
+        tags: ["rl", "rlhf"],
+        time: "25 min", libs: "NumPy",
+        topic: "Advantage estimation for PPO",
+        spec: `<p><code>gae(rewards, values, dones, gamma=0.99, lam=0.95)</code> → advantages, returns.</p>
+<ul>
+<li><code>rewards</code>, <code>values</code>, <code>dones</code>: length <code>T</code> (bool/int episode ends).</li>
+<li>TD residual: <code>δ_t = r_t + γ V_{t+1} (1-done_t) - V_t</code>.</li>
+<li>GAE: <code>A_t = Σ_l (γλ)^l δ_{t+l}</code> (backward pass). Returns <code>R_t = A_t + V_t</code>.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def gae(rewards, values, dones, gamma=0.99, lam=0.95):
+    T = len(rewards)
+    advantages = np.zeros(T)
+    gae_acc = 0.0
+    for t in reversed(range(T)):
+        next_val = values[t + 1] if t + 1 < T else 0.0
+        delta = rewards[t] + gamma * next_val * (1 - dones[t]) - values[t]
+        gae_acc = delta + gamma * lam * (1 - dones[t]) * gae_acc
+        advantages[t] = gae_acc
+    returns = advantages + np.asarray(values)
+    return advantages, returns`
+      },
+      {
+        id: 31, title: "GRPO group-relative advantages", difficulty: "medium", era: "modern",
+        tags: ["rl", "rlhf", "tuning"],
+        time: "18 min", libs: "NumPy",
+        topic: "Group RL for LLMs (DeepSeek-R1 style)",
+        spec: `<p><code>grpo_advantages(rewards, group_ids)</code> — shape <code>(N,)</code> rewards for N completions.</p>
+<ul>
+<li>Group completions by <code>group_ids</code> (same prompt → same id).</li>
+<li>Within each group: <code>A_i = (r_i - mean_group) / (std_group + eps)</code>.</li>
+<li>Groups of size 1 → advantage 0. Return normalized advantages array.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def grpo_advantages(rewards, group_ids, eps=1e-8):
+    rewards = np.asarray(rewards, dtype=np.float64)
+    group_ids = np.asarray(group_ids)
+    adv = np.zeros_like(rewards)
+    for gid in np.unique(group_ids):
+        mask = group_ids == gid
+        r = rewards[mask]
+        if r.size == 1:
+            adv[mask] = 0.0
+        else:
+            adv[mask] = (r - r.mean()) / (r.std() + eps)
+    return adv`
+      },
+      {
+        id: 32, title: "REINFORCE with baseline", difficulty: "medium", era: "modern",
+        tags: ["rl"],
+        time: "15 min", libs: "NumPy",
+        topic: "Policy gradient fundamentals",
+        spec: `<p><code>reinforce_loss(log_probs, rewards, baseline=None)</code> — scalar loss for gradient descent.</p>
+<ul>
+<li><code>log_probs</code>: <code>(N,)</code> log π(a|s) for sampled actions.</li>
+<li>Advantage = <code>reward - baseline</code>; if baseline None, use batch mean reward.</li>
+<li>Loss = <code>-mean(log_prob * advantage)</code> (maximize expected return).</li>
+</ul>`,
+        answer: `import numpy as np
+
+def reinforce_loss(log_probs, rewards, baseline=None):
+    log_probs = np.asarray(log_probs)
+    rewards = np.asarray(rewards)
+    baseline = rewards.mean() if baseline is None else baseline
+    advantage = rewards - baseline
+    return float(-(log_probs * advantage).mean())`
+      },
+      {
+        id: 33, title: "Running reward normalization", difficulty: "easy", era: "modern",
+        tags: ["rl", "rlhf"],
+        time: "12 min", libs: "NumPy",
+        topic: "Stable RLHF training",
+        spec: `<p>Class <code>RunningRewardNorm(momentum=0.99, eps=1e-8)</code>:</p>
+<ul>
+<li><code>update(rewards)</code> — EMA update of mean and variance from batch.</li>
+<li><code>normalize(rewards)</code> — return <code>(r - mean) / sqrt(var + eps)</code> using running stats (no update).</li>
+</ul>`,
+        answer: `import numpy as np
+
+class RunningRewardNorm:
+    def __init__(self, momentum=0.99, eps=1e-8):
+        self.momentum = momentum
+        self.eps = eps
+        self.mean = 0.0
+        self.var = 1.0
+        self.initialized = False
+
+    def update(self, rewards):
+        r = np.asarray(rewards, dtype=np.float64)
+        batch_mean = r.mean()
+        batch_var = r.var() if r.size > 1 else 0.0
+        if not self.initialized:
+            self.mean, self.var = batch_mean, max(batch_var, self.eps)
+            self.initialized = True
+        else:
+            self.mean = self.momentum * self.mean + (1 - self.momentum) * batch_mean
+            self.var = self.momentum * self.var + (1 - self.momentum) * batch_var
+
+    def normalize(self, rewards):
+        r = np.asarray(rewards, dtype=np.float64)
+        return (r - self.mean) / np.sqrt(self.var + self.eps)`
+      }
+    ];
+
+    let activeDifficulty = "all";
+    let activeTag = "all";
+    let modernOnly = false;
+    let answersVisible = false;
+
+    function escapeHtml(s) {
+      return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+
+    function renderQuestions() {
+      const q = document.getElementById("questions");
+      const toc = document.getElementById("toc");
+      const search = document.getElementById("search").value.toLowerCase().trim();
+      q.innerHTML = "";
+      toc.innerHTML = "";
+
+      QUESTIONS.forEach(item => {
+        const haystack = [item.title, item.topic, item.tags.join(" "), item.difficulty, item.era].join(" ").toLowerCase();
+        const matchSearch = !search || haystack.includes(search);
+        const matchDiff = activeDifficulty === "all" || item.difficulty === activeDifficulty;
+        const matchTag = activeTag === "all" || item.tags.includes(activeTag);
+        const matchModern = !modernOnly || item.era === "modern";
+        const visible = matchSearch && matchDiff && matchTag && matchModern;
+
+        const tocLink = document.createElement("a");
+        tocLink.href = `#q${item.id}`;
+        tocLink.innerHTML = `<span class="num">${item.id}.</span> ${escapeHtml(item.title)}`;
+        if (!visible) tocLink.style.opacity = "0.35";
+        toc.appendChild(tocLink);
+
+        const el = document.createElement("article");
+        el.className = "question" + (visible ? "" : " hidden");
+        el.id = `q${item.id}`;
+        el.dataset.difficulty = item.difficulty;
+        el.dataset.era = item.era;
+        el.dataset.tags = item.tags.join(",");
+
+        const tagsHtml = item.tags.map(t => `<span class="tag">${t}</span>`).join("");
+        el.innerHTML = `
+          <div class="q-header">
+            <div class="q-title-wrap">
+              <div class="q-title">${item.id}. ${escapeHtml(item.title)}</div>
+              <div class="q-meta">
+                <span class="badge ${item.difficulty}">${item.difficulty}</span>
+                <span class="badge ${item.era}">${item.era}</span>
+                ${tagsHtml}
+              </div>
+            </div>
+          </div>
+          <div class="q-body">
+            <div class="msa-block">
+              <div class="msa-label m">Metadata</div>
+              <div class="msa-content">
+                <table class="meta-table">
+                  <tr><td>Topic</td><td>${escapeHtml(item.topic)}</td></tr>
+                  <tr><td>Time</td><td>${item.time}</td></tr>
+                  <tr><td>Libraries</td><td>${item.libs}</td></tr>
+                </table>
+              </div>
+            </div>
+            <div class="msa-block">
+              <div class="msa-label s">Specification</div>
+              <div class="msa-content">${item.spec}</div>
+            </div>
+            <div class="msa-block answer-wrap collapsed">
+              <div class="msa-label a">Answer</div>
+              <div class="msa-content">
+                <p class="hint">Hidden — click Reveal answer when ready.</p>
+                <div class="code-block">
+                  <button class="btn copy-btn" type="button" data-code-id="code-${item.id}">Copy</button>
+                  <pre><code id="code-${item.id}">${escapeHtml(item.answer)}</code></pre>
+                </div>
+              </div>
+            </div>
+            <button class="btn toggle-answer" type="button" data-q="${item.id}">Reveal answer</button>
+          </div>`;
+        q.appendChild(el);
+      });
+
+      document.querySelectorAll(".toggle-answer").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const wrap = btn.closest(".q-body").querySelector(".answer-wrap");
+          const collapsed = wrap.classList.toggle("collapsed");
+          btn.textContent = collapsed ? "Reveal answer" : "Hide answer";
+        });
+      });
+
+      document.querySelectorAll(".copy-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const code = document.getElementById(btn.dataset.codeId).textContent;
+          await navigator.clipboard.writeText(code);
+          btn.textContent = "Copied!";
+          setTimeout(() => { btn.textContent = "Copy"; }, 1500);
+        });
+      });
+
+      if (answersVisible) showAllAnswers(true);
+    }
+
+    function showAllAnswers(forceShow) {
+      answersVisible = forceShow !== undefined ? forceShow : !answersVisible;
+      document.querySelectorAll(".answer-wrap").forEach(w => {
+        w.classList.toggle("collapsed", !answersVisible);
+      });
+      document.querySelectorAll(".toggle-answer").forEach(b => {
+        b.textContent = answersVisible ? "Hide answer" : "Reveal answer";
+      });
+      document.getElementById("toggle-all-answers").textContent =
+        answersVisible ? "Hide all answers" : "Show all answers";
+    }
+
+    document.getElementById("search").addEventListener("input", renderQuestions);
+
+    document.querySelectorAll("#difficulty-filters .chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll("#difficulty-filters .chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        activeDifficulty = chip.dataset.filter;
+        renderQuestions();
+      });
+    });
+
+    document.querySelectorAll("#tag-filters .chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll("#tag-filters .chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        activeTag = chip.dataset.tag;
+        renderQuestions();
+      });
+    });
+
+    document.getElementById("toggle-all-answers").addEventListener("click", () => showAllAnswers());
+    document.getElementById("filter-modern").addEventListener("click", function() {
+      modernOnly = !modernOnly;
+      this.classList.toggle("active", modernOnly);
+      this.textContent = modernOnly ? "Show all eras" : "Modern only";
+      renderQuestions();
+    });
+
+    renderQuestions();
+  </script>
+</body>
+</html>
