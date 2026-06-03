@@ -7,10 +7,10 @@
   <meta name="description" content="Modern ML coding interview question bank in Python MSA format: transformers, LLMs, contrastive learning, LoRA, DPO, and fundamentals.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="ML Coding Interview Questions — Python MSA">
-  <meta property="og:description" content="22 Python coding interview questions: ML fundamentals, transformers, fine-tuning, and reinforcement learning.">
+  <meta property="og:description" content="23 Python coding interview questions: ML fundamentals, transformers, fine-tuning, DPO, GRPO, and RL.">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="ML Coding Interview Questions">
-  <meta name="twitter:description" content="22 Python MSA interview questions — fundamentals, transformers, tuning, and RL.">
+  <meta name="twitter:description" content="23 Python MSA interview questions — fundamentals, transformers, DPO, GRPO, and RL.">
   <style>
     :root {
       --bg: #09090b;
@@ -437,9 +437,9 @@
 
   <main>
     <div class="hero-stats">
-      <div class="stat"><strong>22</strong><span>Questions</span></div>
+      <div class="stat"><strong>23</strong><span>Questions</span></div>
       <div class="stat"><strong>3</strong><span>Fine-tuning</span></div>
-      <div class="stat"><strong>4</strong><span>RL & alignment</span></div>
+      <div class="stat"><strong>6</strong><span>RL & alignment</span></div>
       <div class="stat"><strong>MSA</strong><span>Metadata · Spec · Answer</span></div>
     </div>
 
@@ -493,7 +493,7 @@
         </div>
         <div class="bundle-card">
           <h3>RL & alignment (60 min)</h3>
-          <p>#18 KL penalty → #20 GAE → #21 Group advantages → #22 Reward norm</p>
+          <p>#22 DPO loss → #21 GRPO loss → #18 KL penalty → #20 GAE</p>
         </div>
         <div class="bundle-card">
           <h3>Hard signal (60 min)</h3>
@@ -1025,33 +1025,67 @@ def gae(rewards, values, dones, gamma=0.99, lam=0.95):
     return advantages, returns`
       },
       {
-        id: 21, title: "Group-normalized advantages", difficulty: "medium", era: "modern",
+        id: 21, title: "GRPO objective", difficulty: "medium", era: "modern",
         tags: ["rl", "rlhf", "tuning"],
-        time: "18 min", libs: "NumPy",
-        topic: "Relative rewards within a batch",
-        spec: `<p><code>group_normalized_advantages(rewards, group_ids)</code> — shape <code>(N,)</code> rewards.</p>
+        time: "20 min", libs: "NumPy",
+        topic: "Group-relative policy optimization",
+        spec: `<p>Implement the GRPO training objective for a batch of completions:</p>
 <ul>
-<li>Group samples by <code>group_ids</code> (e.g. multiple outputs for the same input).</li>
-<li>Within each group: subtract mean, divide by std (+ eps).</li>
-<li>Singleton groups → advantage 0.</li>
+<li><code>grpo_loss(log_probs, rewards, group_ids, eps=1e-8)</code> → scalar loss.</li>
+<li><code>log_probs</code>, <code>rewards</code>: shape <code>(N,)</code> — total log prob and reward per completion.</li>
+<li><code>group_ids</code>: completions sharing the same id came from the same prompt.</li>
+<li>Within each group, compute advantage <code>A_i = (r_i - mean) / (std + eps)</code>; singleton groups → 0.</li>
+<li>GRPO loss: <code>-mean(A_i * log_probs_i)</code> (maximize reward-weighted likelihood).</li>
 </ul>`,
         answer: `import numpy as np
 
-def group_normalized_advantages(rewards, group_ids, eps=1e-8):
+def grpo_advantages(rewards, group_ids, eps=1e-8):
     rewards = np.asarray(rewards, dtype=np.float64)
     group_ids = np.asarray(group_ids)
     adv = np.zeros_like(rewards)
     for gid in np.unique(group_ids):
         mask = group_ids == gid
         r = rewards[mask]
-        if r.size == 1:
+        if r.size <= 1:
             adv[mask] = 0.0
         else:
             adv[mask] = (r - r.mean()) / (r.std() + eps)
-    return adv`
+    return adv
+
+def grpo_loss(log_probs, rewards, group_ids, eps=1e-8):
+    log_probs = np.asarray(log_probs, dtype=np.float64)
+    adv = grpo_advantages(rewards, group_ids, eps)
+    return float(-(adv * log_probs).mean())`
       },
       {
-        id: 22, title: "Running reward normalization", difficulty: "easy", era: "modern",
+        id: 22, title: "DPO objective", difficulty: "hard", era: "modern",
+        tags: ["rlhf", "training", "tuning"],
+        time: "20 min", libs: "NumPy",
+        topic: "Direct preference optimization",
+        spec: `<p>Implement the DPO loss for pairwise preferences without an explicit reward model:</p>
+<ul>
+<li><code>dpo_loss(logp_chosen, logp_rejected, logp_ref_chosen, logp_ref_rejected, beta=0.1)</code></li>
+<li>Inputs shape <code>(N,)</code> — sequence log-probs under policy π_θ and frozen reference π_ref.</li>
+<li>Implicit reward margin: <code>(logp_c - logp_r)_π - (logp_c - logp_r)_ref</code>.</li>
+<li>DPO loss: <code>-mean(log σ(β * margin))</code>. Use numerically stable log-sigmoid.</li>
+</ul>`,
+        answer: `import numpy as np
+
+def log_sigmoid(x):
+    return -np.logaddexp(0, -x)
+
+def dpo_loss(logp_chosen, logp_rejected, logp_ref_chosen, logp_ref_rejected, beta=0.1):
+    logp_chosen = np.asarray(logp_chosen, dtype=np.float64)
+    logp_rejected = np.asarray(logp_rejected, dtype=np.float64)
+    logp_ref_chosen = np.asarray(logp_ref_chosen, dtype=np.float64)
+    logp_ref_rejected = np.asarray(logp_ref_rejected, dtype=np.float64)
+    policy_margin = logp_chosen - logp_rejected
+    ref_margin = logp_ref_chosen - logp_ref_rejected
+    logits = beta * (policy_margin - ref_margin)
+    return float(-log_sigmoid(logits).mean())`
+      },
+      {
+        id: 23, title: "Running reward normalization", difficulty: "easy", era: "modern",
         tags: ["rl", "rlhf"],
         time: "12 min", libs: "NumPy",
         topic: "Stable RL training",
