@@ -7,10 +7,10 @@
   <meta name="description" content="Modern ML coding interview question bank in Python MSA format: transformers, LLMs, contrastive learning, LoRA, DPO, and fundamentals.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="ML Coding Interview Questions — Python MSA">
-  <meta property="og:description" content="33 Python coding questions: LLM tuning, RLHF, transformers, and ML fundamentals. Single offline HTML file.">
+  <meta property="og:description" content="33 Python coding interview questions: ML fundamentals, transformers, fine-tuning, and reinforcement learning.">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="ML Coding Interview Questions">
-  <meta name="twitter:description" content="33 Python MSA interview questions — LLM tuning, RL, transformers, fundamentals.">
+  <meta name="twitter:description" content="33 Python MSA interview questions — fundamentals, transformers, tuning, and RL.">
   <style>
     :root {
       --bg: #09090b;
@@ -420,10 +420,10 @@
   <header>
     <div class="header-inner">
       <h1>ML Coding Interview Questions</h1>
-      <p class="subtitle">Python · MSA format · Fundamentals + modern LLM / transformer stack</p>
+      <p class="subtitle">Python · MSA format · ML fundamentals, transformers, tuning & RL</p>
       <div class="share-bar">
-        <span class="share-hint"><strong>Share this file</strong> — one self-contained HTML (works offline). Email, Slack, Drive, or double-click to open in any browser.</span>
-        <button class="btn" id="download-copy" type="button">Download a copy</button>
+        <span class="share-hint"><strong>Share:</strong> <a href="https://burak-amd.github.io/ml-coding-interview-questions/" style="color:#818cf8">burak-amd.github.io/ml-coding-interview-questions</a></span>
+        <button class="btn" id="download-copy" type="button">Download offline copy</button>
       </div>
       <div class="toolbar">
         <div class="search-wrap">
@@ -438,8 +438,8 @@
   <main>
     <div class="hero-stats">
       <div class="stat"><strong>33</strong><span>Questions</span></div>
-      <div class="stat"><strong>10</strong><span>LLM tuning</span></div>
-      <div class="stat"><strong>8</strong><span>RL / RLHF</span></div>
+      <div class="stat"><strong>10</strong><span>Fine-tuning</span></div>
+      <div class="stat"><strong>8</strong><span>RL & alignment</span></div>
       <div class="stat"><strong>MSA</strong><span>Metadata · Spec · Answer</span></div>
     </div>
 
@@ -463,8 +463,8 @@
       <button class="chip" data-tag="llm" type="button">LLM inference</button>
       <button class="chip" data-tag="transformer" type="button">Transformers</button>
       <button class="chip" data-tag="training" type="button">Training</button>
-      <button class="chip" data-tag="rlhf" type="button">RLHF / alignment</button>
-      <button class="chip" data-tag="tuning" type="button">LLM tuning</button>
+      <button class="chip" data-tag="rlhf" type="button">Alignment</button>
+      <button class="chip" data-tag="tuning" type="button">Fine-tuning</button>
       <button class="chip" data-tag="rl" type="button">RL</button>
       <button class="chip" data-tag="classic" type="button">Classic ML</button>
     </div>
@@ -480,32 +480,32 @@
       <h2>Suggested interview bundles</h2>
       <div class="bundle-grid">
         <div class="bundle-card">
-          <h3>LLM inference (45 min)</h3>
-          <p>#6 RMSNorm → #8 RoPE → #12 KV cache → #14 Top-p sampling</p>
+          <h3>Autoregressive models (45 min)</h3>
+          <p>#6 RMS norm → #8 Rotary encoding → #12 KV cache → #14 Nucleus sampling</p>
         </div>
         <div class="bundle-card">
           <h3>Transformer block (60 min)</h3>
-          <p>#7 Causal mask → #9 MHA → #10 GQA → #11 SwiGLU FFN</p>
+          <p>#7 Causal mask → #9 Multi-head attention → #10 Grouped-query → #11 Gated FFN</p>
         </div>
         <div class="bundle-card">
-          <h3>Modern training (60 min)</h3>
-          <p>#4 Label smoothing → #13 InfoNCE → #15 LoRA → #17 DPO loss</p>
+          <h3>Training & alignment (60 min)</h3>
+          <p>#4 Label smoothing → #13 InfoNCE → #15 Low-rank adapter → #17 Preference loss</p>
         </div>
         <div class="bundle-card">
           <h3>Foundations (45 min)</h3>
           <p>#1 Softmax + CE → #2 Stratified split → #3 Metrics → #5 K-means</p>
         </div>
         <div class="bundle-card">
-          <h3>LLM fine-tuning (60 min)</h3>
-          <p>#23 SFT masked loss → #26 LR scaling → #15 LoRA → #27 Packed attention mask</p>
+          <h3>Fine-tuning (60 min)</h3>
+          <p>#23 Masked loss → #26 LR scaling → #15 Low-rank adapter → #27 Block mask</p>
         </div>
         <div class="bundle-card">
-          <h3>RLHF / PPO (60 min)</h3>
-          <p>#24 Reward model → #25 KL penalty → #30 GAE → #29 PPO clip → #17 DPO</p>
+          <h3>RL & preferences (60 min)</h3>
+          <p>#24 Pairwise ranking → #25 KL penalty → #30 GAE → #29 Clipped surrogate → #17 Preference loss</p>
         </div>
         <div class="bundle-card">
-          <h3>Modern RL (45 min)</h3>
-          <p>#32 REINFORCE → #31 GRPO → #33 Reward norm → #29 PPO clip</p>
+          <h3>Policy gradients (45 min)</h3>
+          <p>#32 REINFORCE → #31 Group advantages → #33 Reward norm → #29 Clipped surrogate</p>
         </div>
       </div>
     </section>
@@ -621,7 +621,7 @@ def classification_report(y_true, y_pred, average="macro"):
         id: 4, title: "Label-smoothing cross-entropy", difficulty: "easy", era: "modern",
         tags: ["training", "transformer"],
         time: "12 min", libs: "NumPy",
-        topic: "Regularization (used in ViT, LLM pretraining)",
+        topic: "Regularization",
         spec: `<p><code>label_smooth_ce(logits, targets, num_classes, smoothing=0.1)</code> — mean loss over batch.</p>
 <ul>
 <li>Hard target distribution: <code>(1 - ε)</code> on true class, <code>ε / (C - 1)</code> on others.</li>
@@ -664,10 +664,10 @@ def kmeans(X, k, max_iters=100, seed=0):
     return centroids, labels`
       },
       {
-        id: 6, title: "RMSNorm", difficulty: "easy", era: "modern",
+        id: 6, title: "RMS normalization", difficulty: "easy", era: "modern",
         tags: ["transformer", "llm"],
         time: "10 min", libs: "NumPy",
-        topic: "Normalization (LLaMA, Mistral, Gemma)",
+        topic: "Normalization layers",
         spec: `<p><code>rms_norm(x, weight, eps=1e-6)</code> — normalize over last dim; no mean subtraction.</p>
 <ul>
 <li><code>x_hat = x / sqrt(mean(x²) + eps)</code>, return <code>weight * x_hat</code>.</li>
@@ -699,11 +699,11 @@ def merge_masks(causal, padding):
     return np.asarray(causal) & np.asarray(padding)`
       },
       {
-        id: 8, title: "Rotary positional embeddings (RoPE)", difficulty: "medium", era: "modern",
+        id: 8, title: "Rotary position encoding", difficulty: "medium", era: "modern",
         tags: ["transformer", "llm"],
         time: "20 min", libs: "NumPy",
-        topic: "Position encoding (GPT-NeoX, LLaMA)",
-        spec: `<p>Apply RoPE to query/key vectors (last dim must be even).</p>
+        topic: "Relative position encoding",
+        spec: `<p>Apply rotary encoding to vectors (last dim must be even).</p>
 <ul>
 <li><code>rope_freqs(seq_len, dim, theta=10000.0)</code> → angles shape <code>(seq_len, dim/2)</code>.</li>
 <li><code>apply_rope(x, freqs)</code> — split last dim into pairs <code>(x1, x2)</code>, rotate: <code>x1' = x1*cos - x2*sin</code>, <code>x2' = x1*sin + x2*cos</code>.</li>
@@ -757,10 +757,10 @@ def mha_forward(x, Wq, Wk, Wv, Wo, n_heads, mask=None):
     return out @ Wo`
       },
       {
-        id: 10, title: "Grouped-query attention (GQA)", difficulty: "hard", era: "modern",
+        id: 10, title: "Grouped-query attention", difficulty: "hard", era: "modern",
         tags: ["transformer", "llm"],
         time: "25 min", libs: "NumPy",
-        topic: "Efficient KV (Llama 2/3, Mistral)",
+        topic: "Memory-efficient attention",
         spec: `<p><code>gqa_forward(Q, K, V, n_heads, n_kv_heads, mask=None)</code></p>
 <ul>
 <li><code>Q</code>: <code>(B, H, T, d)</code>; <code>K, V</code>: <code>(B, H_kv, T, d)</code> with <code>H % H_kv == 0</code>.</li>
@@ -789,10 +789,10 @@ def gqa_forward(Q, K, V, n_heads, n_kv_heads, mask=None):
     return attn @ V`
       },
       {
-        id: 11, title: "SwiGLU feed-forward block", difficulty: "medium", era: "modern",
+        id: 11, title: "Gated feed-forward block", difficulty: "medium", era: "modern",
         tags: ["transformer", "llm"],
         time: "15 min", libs: "NumPy",
-        topic: "FFN (PaLM, LLaMA)",
+        topic: "Transformer feed-forward network",
         spec: `<p><code>swiglu_ffn(x, W_gate, W_up, W_down)</code></p>
 <ul>
 <li><code>gate = silu(x @ W_gate)</code>, <code>up = x @ W_up</code>, return <code>(gate * up) @ W_down</code>.</li>
@@ -809,7 +809,7 @@ def swiglu_ffn(x, W_gate, W_up, W_down):
     return (gate * up) @ W_down`
       },
       {
-        id: 12, title: "KV cache decode step", difficulty: "medium", era: "modern",
+        id: 12, title: "Incremental KV cache", difficulty: "medium", era: "modern",
         tags: ["llm"],
         time: "18 min", libs: "NumPy",
         topic: "Autoregressive inference",
@@ -837,10 +837,10 @@ def kv_cache_get(cache, length):
         id: 13, title: "InfoNCE contrastive loss", difficulty: "medium", era: "modern",
         tags: ["training"],
         time: "15 min", libs: "NumPy",
-        topic: "Contrastive learning (CLIP, SimCLR)",
+        topic: "Contrastive learning",
         spec: `<p><code>info_nce(sim_matrix, temperature=0.07)</code></p>
 <ul>
-<li><code>sim_matrix[i,j] = cosine_sim(z_i, z_j)</code> for batch of L2-normalized embeddings; diagonal is positive pair.</li>
+<li><code>sim_matrix[i,j]</code> = similarity between sample i and j; diagonal entries are positive pairs.</li>
 <li>Loss = mean over rows of <code>-log( exp(s_ii/τ) / sum_j exp(s_ij/τ) )</code>.</li>
 </ul>`,
         answer: `import numpy as np
@@ -855,11 +855,10 @@ def info_nce(sim_matrix, temperature=0.07):
     return float((-np.log(pos / denom)).mean())`
       },
       {
-        id: 14, title: "Top-p (nucleus) sampling", difficulty: "medium", era: "modern",
+        id: 14, title: "Nucleus (top-p) sampling", difficulty: "medium", era: "modern",
         tags: ["llm"],
         time: "15 min", libs: "NumPy",
-        time2: "",
-        topic: "Text generation",
+        topic: "Stochastic decoding",
         spec: `<p><code>top_p_sample(logits, p=0.9, rng=None)</code> → int token index.</p>
 <ul>
 <li>Sort probs descending; keep smallest set with cumulative prob ≥ p.</li>
@@ -881,13 +880,13 @@ def top_p_sample(logits, p=0.9, rng=None):
     return int(rng.choice(keep, p=kept))`
       },
       {
-        id: 15, title: "LoRA linear layer forward", difficulty: "medium", era: "modern",
-        tags: ["training", "llm"],
+        id: 15, title: "Low-rank adapter layer", difficulty: "medium", era: "modern",
+        tags: ["training", "llm", "tuning"],
         time: "15 min", libs: "NumPy",
         topic: "Parameter-efficient fine-tuning",
         spec: `<p><code>lora_linear(x, W, A, B, alpha=16, rank=8)</code></p>
 <ul>
-<li>Base: <code>x @ W</code>. LoRA delta: <code>(x @ A @ B) * (alpha / rank)</code>.</li>
+<li>Base output: <code>x @ W</code>. Low-rank update: <code>(x @ A @ B) * (alpha / rank)</code>.</li>
 <li><code>W: (d_in, d_out)</code>, <code>A: (d_in, r)</code>, <code>B: (r, d_out)</code>. Return sum.</li>
 </ul>`,
         answer: `import numpy as np
@@ -898,14 +897,14 @@ def lora_linear(x, W, A, B, alpha=16, rank=8):
     return base + delta`
       },
       {
-        id: 16, title: "Online softmax (streaming attention)", difficulty: "hard", era: "modern",
+        id: 16, title: "Streaming softmax for attention", difficulty: "hard", era: "modern",
         tags: ["transformer", "llm"],
         time: "25 min", libs: "NumPy",
-        topic: "Flash-attention building block",
-        spec: `<p>Process key/value blocks without materializing full softmax over all keys.</p>
+        topic: "Memory-efficient attention",
+        spec: `<p>Compute attention output over key/value blocks without storing full softmax over all keys.</p>
 <ul>
-<li><code>online_softmax_update(m, l, scores_block)</code> — update running max <code>m</code> and sum <code>l</code> of exp(scores - m).</li>
-<li><code>online_attention(q, k_blocks, v_blocks)</code> — loop blocks; return weighted output for one query vector.</li>
+<li>Process blocks sequentially; maintain running statistics to merge partial softmax results.</li>
+<li><code>online_attention(q, k_blocks, v_blocks)</code> — return weighted output for one query vector.</li>
 </ul>`,
         answer: `import numpy as np
 
@@ -925,28 +924,28 @@ def online_attention(q, k_blocks, v_blocks):
     return num / l`
       },
       {
-        id: 17, title: "DPO loss (direct preference optimization)", difficulty: "hard", era: "modern",
+        id: 17, title: "Preference alignment loss", difficulty: "hard", era: "modern",
         tags: ["rlhf", "training"],
         time: "20 min", libs: "NumPy",
-        topic: "LLM alignment",
-        spec: `<p><code>dpo_loss(logp_chosen, logp_rejected, logp_ref_chosen, logp_ref_rejected, beta=0.1)</code></p>
+        topic: "Learning from pairwise preferences",
+        spec: `<p><code>preference_loss(logp_chosen, logp_rejected, logp_ref_chosen, logp_ref_rejected, beta=0.1)</code></p>
 <ul>
-<li>Implicit reward diff: <code>Δ_π = (log π_θ(c) - log π_θ(r)) - (log π_ref(c) - log π_ref(r))</code>.</li>
-<li>Per pair loss: <code>-log σ(β * Δ_π)</code>. Return mean over batch.</li>
+<li>Compare policy vs frozen reference on chosen/rejected completions.</li>
+<li>Loss = <code>-mean(log σ(β * ((logp_c - logp_r)_π - (logp_c - logp_r)_ref)))</code>.</li>
 </ul>`,
         answer: `import numpy as np
 
-def dpo_loss(logp_chosen, logp_rejected, logp_ref_chosen, logp_ref_rejected, beta=0.1):
+def preference_loss(logp_chosen, logp_rejected, logp_ref_chosen, logp_ref_rejected, beta=0.1):
     pi_diff = logp_chosen - logp_rejected
     ref_diff = logp_ref_chosen - logp_ref_rejected
     logits = beta * (pi_diff - ref_diff)
     return float((-np.log(1.0 / (1.0 + np.exp(-logits)))).mean())`
       },
       {
-        id: 18, title: "Mixture-of-Experts top-k routing", difficulty: "hard", era: "modern",
+        id: 18, title: "Top-k expert routing", difficulty: "hard", era: "modern",
         tags: ["transformer", "llm"],
         time: "25 min", libs: "NumPy",
-        topic: "MoE (Mixtral, DeepSeek)",
+        topic: "Mixture-of-experts routing",
         spec: `<p><code>route_tokens(router_logits, k=2)</code> → <code>(expert_indices, gate_weights)</code></p>
 <ul>
 <li><code>router_logits</code>: <code>(T, E)</code> per-token expert scores.</li>
@@ -1055,69 +1054,68 @@ def lr_schedule(step, warmup_steps, total_steps, base_lr):
     return base_lr * 0.5 * (1.0 + math.cos(math.pi * p))`
       },
       {
-        id: 23, title: "SFT loss with response-only mask", difficulty: "medium", era: "modern",
+        id: 23, title: "Masked supervised loss", difficulty: "medium", era: "modern",
         tags: ["tuning", "training", "llm"],
         time: "15 min", libs: "NumPy",
-        topic: "Supervised fine-tuning (instruction tuning)",
-        spec: `<p><code>sft_loss(log_probs, targets, loss_mask)</code> — scalar mean NLL.</p>
+        topic: "Fine-tuning with selective labels",
+        spec: `<p><code>masked_nll_loss(log_probs, loss_mask)</code> — scalar mean NLL.</p>
 <ul>
-<li><code>log_probs</code>, <code>targets</code>, <code>loss_mask</code>: shape <code>(T,)</code> for one sequence (token-level log prob of target token).</li>
-<li>Compute NLL only where <code>loss_mask == 1</code> (assistant / completion tokens). Ignore prompt + padding.</li>
-<li>Normalize by number of supervised tokens, not total length.</li>
+<li><code>log_probs</code>, <code>loss_mask</code>: shape <code>(T,)</code> (per-token log prob of target).</li>
+<li>Average NLL only where <code>loss_mask == 1</code>; ignore padding and unsupervised positions.</li>
+<li>Normalize by number of masked tokens.</li>
 </ul>`,
         answer: `import numpy as np
 
-def sft_loss(log_probs, targets, loss_mask):
+def masked_nll_loss(log_probs, loss_mask):
     log_probs = np.asarray(log_probs)
     loss_mask = np.asarray(loss_mask, dtype=bool)
     if loss_mask.sum() == 0:
         raise ValueError("No supervised tokens")
-    nll = -log_probs[loss_mask]
-    return float(nll.mean())`
+    return float(-log_probs[loss_mask].mean())`
       },
       {
-        id: 24, title: "Bradley–Terry reward model loss", difficulty: "medium", era: "modern",
+        id: 24, title: "Pairwise ranking loss", difficulty: "medium", era: "modern",
         tags: ["tuning", "rlhf"],
         time: "15 min", libs: "NumPy",
-        topic: "Preference modeling (RLHF stage 1)",
-        spec: `<p><code>reward_model_loss(r_chosen, r_rejected)</code> — mean over pairs.</p>
+        topic: "Reward / preference modeling",
+        spec: `<p><code>pairwise_ranking_loss(score_preferred, score_other)</code> — mean over pairs.</p>
 <ul>
-<li><code>r_chosen</code>, <code>r_rejected</code>: shape <code>(N,)</code> scalar scores from reward head.</li>
-<li>Bradley–Terry: maximize <code>P(chosen ≻ rejected)</code> → loss = <code>-mean(log σ(r_c - r_r))</code>.</li>
+<li>Both inputs shape <code>(N,)</code> — model scores for preferred vs non-preferred outputs.</li>
+<li>Loss = <code>-mean(log σ(score_preferred - score_other))</code>.</li>
 </ul>`,
         answer: `import numpy as np
 
-def reward_model_loss(r_chosen, r_rejected):
-    diff = np.asarray(r_chosen) - np.asarray(r_rejected)
+def pairwise_ranking_loss(score_preferred, score_other):
+    diff = np.asarray(score_preferred) - np.asarray(score_other)
     return float(-np.log(1.0 / (1.0 + np.exp(-diff))).mean())`
       },
       {
-        id: 25, title: "Token-level KL to reference model", difficulty: "medium", era: "modern",
+        id: 25, title: "KL penalty vs reference policy", difficulty: "medium", era: "modern",
         tags: ["tuning", "rlhf", "rl"],
         time: "18 min", libs: "NumPy",
-        topic: "RLHF / PPO KL penalty",
-        spec: `<p>Implement approximate KL used in PPO-style LLM training:</p>
+        topic: "Policy regularization",
+        spec: `<p>Penalize deviation from a reference model using log-probabilities:</p>
 <ul>
-<li><code>kl_divergence(logp_policy, logp_ref)</code> — per-token <code>exp(log_ref - log_pol) - (log_ref - log_pol) - 1</code> (k1 estimator).</li>
-<li><code>kl_penalty_loss(logp_policy, logp_ref, mask, beta=0.02)</code> — masked mean KL × beta.</li>
+<li><code>approx_kl(logp_policy, logp_ref)</code> — per-element approximate KL from log probs.</li>
+<li><code>kl_penalty_loss(logp_policy, logp_ref, mask, beta=0.02)</code> — masked mean × beta.</li>
 </ul>`,
         answer: `import numpy as np
 
-def kl_divergence(logp_policy, logp_ref):
+def approx_kl(logp_policy, logp_ref):
     log_ratio = np.asarray(logp_ref) - np.asarray(logp_policy)
     ratio = np.exp(log_ratio)
     return ratio - log_ratio - 1.0
 
 def kl_penalty_loss(logp_policy, logp_ref, mask, beta=0.02):
     mask = np.asarray(mask, dtype=bool)
-    kl = kl_divergence(logp_policy, logp_ref)
+    kl = approx_kl(logp_policy, logp_ref)
     return float(beta * kl[mask].mean())`
       },
       {
-        id: 26, title: "Linear LR scaling for fine-tuning", difficulty: "easy", era: "modern",
+        id: 26, title: "Batch-size learning rate scaling", difficulty: "easy", era: "modern",
         tags: ["tuning", "training"],
         time: "8 min", libs: "stdlib",
-        topic: "Hyperparameter scaling (OpenAI scaling laws rule-of-thumb)",
+        topic: "Hyperparameter scaling",
         spec: `<p><code>scale_lr(base_lr, batch_size, ref_batch=256, max_lr=None)</code></p>
 <ul>
 <li>Linear scaling: <code>lr = base_lr * (batch_size / ref_batch)</code>.</li>
@@ -1134,37 +1132,36 @@ def scale_lr(base_lr, batch_size, ref_batch=256, max_lr=None):
     return lr`
       },
       {
-        id: 27, title: "Packed-sequence block attention mask", difficulty: "hard", era: "modern",
+        id: 27, title: "Block-diagonal causal mask", difficulty: "hard", era: "modern",
         tags: ["tuning", "transformer", "llm"],
         time: "20 min", libs: "NumPy",
-        topic: "Efficient SFT (multiple docs per GPU step)",
-        spec: `<p><code>packed_attention_mask(seq_lens, max_len)</code> → bool <code>(max_len, max_len)</code>.</p>
+        topic: "Batched variable-length sequences",
+        spec: `<p><code>block_causal_mask(segment_lens, max_len)</code> → bool <code>(max_len, max_len)</code>.</p>
 <ul>
-<li>Sequence is concatenation of segments with lengths <code>seq_lens</code> (e.g. <code>[3, 2, 4]</code>).</li>
-<li>Token i may attend to j iff same segment AND <code>j &lt;= i</code> (causal within segment).</li>
-<li>No cross-segment attention (block-diagonal causal).</li>
+<li>Input is a list of segment lengths (e.g. <code>[3, 2, 4]</code>) concatenated into one sequence.</li>
+<li>Token i may attend to j iff same segment AND <code>j &lt;= i</code>.</li>
+<li>No attention across segment boundaries.</li>
 </ul>`,
         answer: `import numpy as np
 
-def packed_attention_mask(seq_lens, max_len):
+def block_causal_mask(segment_lens, max_len):
     mask = np.zeros((max_len, max_len), dtype=bool)
     start = 0
-    for length in seq_lens:
+    for length in segment_lens:
         end = start + length
         mask[start:end, start:end] = np.tril(np.ones((length, length), dtype=bool))
         start = end
     return mask`
       },
       {
-        id: 28, title: "Log-prob under teacher forcing", difficulty: "easy", era: "modern",
+        id: 28, title: "Sequence log-likelihood", difficulty: "easy", era: "modern",
         tags: ["tuning", "llm", "rl"],
         time: "12 min", libs: "NumPy",
-        topic: "RLHF rollout scoring",
+        topic: "Scoring model outputs",
         spec: `<p><code>sequence_logprob(logits, target_ids)</code> → total log prob and per-token log probs.</p>
 <ul>
-<li><code>logits</code>: <code>(T, V)</code>; <code>target_ids</code>: <code>(T,)</code> next-token targets aligned with positions.</li>
-<li>Use stable log-softmax; return <code>(sum_logp, log_probs[T])</code>.</li>
-<li>Used in PPO / GRPO to score generated continuations.</li>
+<li><code>logits</code>: <code>(T, V)</code>; <code>target_ids</code>: <code>(T,)</code> target token at each step.</li>
+<li>Use stable log-softmax; return <code>(sum_logp, token_logp)</code>.</li>
 </ul>`,
         answer: `import numpy as np
 
@@ -1176,19 +1173,19 @@ def sequence_logprob(logits, target_ids):
     return float(token_logp.sum()), token_logp`
       },
       {
-        id: 29, title: "PPO clipped surrogate objective", difficulty: "hard", era: "modern",
+        id: 29, title: "Clipped policy surrogate loss", difficulty: "hard", era: "modern",
         tags: ["rl", "rlhf"],
         time: "20 min", libs: "NumPy",
-        topic: "Policy optimization (RLHF stage 2)",
-        spec: `<p><code>ppo_loss(logp_new, logp_old, advantages, clip_eps=0.2)</code></p>
+        topic: "Trust-region policy optimization",
+        spec: `<p><code>clipped_surrogate_loss(logp_new, logp_old, advantages, clip_eps=0.2)</code></p>
 <ul>
-<li>Ratio <code>r = exp(logp_new - logp_old)</code> per token or per sequence (here per element).</li>
-<li><code>L = -mean(min(r*A, clip(r, 1-ε, 1+ε)*A))</code> — pessimistic clip.</li>
-<li>Input shapes all broadcastable 1D arrays of same length.</li>
+<li>Importance ratio <code>r = exp(logp_new - logp_old)</code>.</li>
+<li><code>L = -mean(min(r·A, clip(r, 1-ε, 1+ε)·A))</code>.</li>
+<li>All inputs: 1D arrays of equal length.</li>
 </ul>`,
         answer: `import numpy as np
 
-def ppo_loss(logp_new, logp_old, advantages, clip_eps=0.2):
+def clipped_surrogate_loss(logp_new, logp_old, advantages, clip_eps=0.2):
     ratio = np.exp(np.asarray(logp_new) - np.asarray(logp_old))
     adv = np.asarray(advantages)
     unclipped = ratio * adv
@@ -1199,7 +1196,7 @@ def ppo_loss(logp_new, logp_old, advantages, clip_eps=0.2):
         id: 30, title: "GAE (generalized advantage estimation)", difficulty: "hard", era: "modern",
         tags: ["rl", "rlhf"],
         time: "25 min", libs: "NumPy",
-        topic: "Advantage estimation for PPO",
+        topic: "Advantage estimation",
         spec: `<p><code>gae(rewards, values, dones, gamma=0.99, lam=0.95)</code> → advantages, returns.</p>
 <ul>
 <li><code>rewards</code>, <code>values</code>, <code>dones</code>: length <code>T</code> (bool/int episode ends).</li>
@@ -1221,19 +1218,19 @@ def gae(rewards, values, dones, gamma=0.99, lam=0.95):
     return advantages, returns`
       },
       {
-        id: 31, title: "GRPO group-relative advantages", difficulty: "medium", era: "modern",
+        id: 31, title: "Group-normalized advantages", difficulty: "medium", era: "modern",
         tags: ["rl", "rlhf", "tuning"],
         time: "18 min", libs: "NumPy",
-        topic: "Group RL for LLMs (DeepSeek-R1 style)",
-        spec: `<p><code>grpo_advantages(rewards, group_ids)</code> — shape <code>(N,)</code> rewards for N completions.</p>
+        topic: "Relative rewards within a batch",
+        spec: `<p><code>group_normalized_advantages(rewards, group_ids)</code> — shape <code>(N,)</code> rewards.</p>
 <ul>
-<li>Group completions by <code>group_ids</code> (same prompt → same id).</li>
-<li>Within each group: <code>A_i = (r_i - mean_group) / (std_group + eps)</code>.</li>
-<li>Groups of size 1 → advantage 0. Return normalized advantages array.</li>
+<li>Group samples by <code>group_ids</code> (e.g. multiple outputs for the same input).</li>
+<li>Within each group: subtract mean, divide by std (+ eps).</li>
+<li>Singleton groups → advantage 0.</li>
 </ul>`,
         answer: `import numpy as np
 
-def grpo_advantages(rewards, group_ids, eps=1e-8):
+def group_normalized_advantages(rewards, group_ids, eps=1e-8):
     rewards = np.asarray(rewards, dtype=np.float64)
     group_ids = np.asarray(group_ids)
     adv = np.zeros_like(rewards)
@@ -1270,7 +1267,7 @@ def reinforce_loss(log_probs, rewards, baseline=None):
         id: 33, title: "Running reward normalization", difficulty: "easy", era: "modern",
         tags: ["rl", "rlhf"],
         time: "12 min", libs: "NumPy",
-        topic: "Stable RLHF training",
+        topic: "Stable RL training",
         spec: `<p>Class <code>RunningRewardNorm(momentum=0.99, eps=1e-8)</code>:</p>
 <ul>
 <li><code>update(rewards)</code> — EMA update of mean and variance from batch.</li>
